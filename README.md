@@ -168,9 +168,6 @@ by systemd and is not tracked.
 
 ## Machine-specific settings preserved unchanged
 
-- Fish ends with `/home/dimm/.local/bin` in PATH. Review for another account.
-- Kitty uses `/run/user/1000/kitty-caelestia.sock`; match your actual UID and the
-  border helper's socket. The migration comment also mentions `/home/dimm`.
 - Hyprland overrides specify `eDP-1`, `1920x1080@144`, scale 1 and position `0x0`.
 - Both terminals use CaskaydiaCove Nerd Font at size 14.
 - Hyprexpo needs a compatible installed plugin; the override reloads `hyprpm`
