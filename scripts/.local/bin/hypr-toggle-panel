@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Toggle the focused Hyprland window between a centered panel and tiled.
+set -euo pipefail
+
+window=$(hyprctl activewindow -j)
+address=$(jq -r '.address' <<<"$window")
+floating=$(jq -r '.floating' <<<"$window")
+fullscreen=$(jq -r '.fullscreen' <<<"$window")
+monitor_id=$(jq -r '.monitor' <<<"$window")
+
+if [[ "$address" == "null" || -z "$address" ]]; then
+    exit 0
+fi
+
+if [[ "$fullscreen" != "0" ]]; then
+    hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = "fullscreen" })'
+fi
+
+if [[ "$fullscreen" == "0" && "$floating" == "true" ]]; then
+    hyprctl dispatch 'hl.dsp.window.float({ action = "unset" })'
+    exit 0
+fi
+
+monitor=$(hyprctl monitors -j | jq -c --argjson id "$monitor_id" '.[] | select(.id == $id)')
+monitor_x=$(jq -r '.x' <<<"$monitor")
+monitor_y=$(jq -r '.y' <<<"$monitor")
+monitor_width=$(jq -r '.width' <<<"$monitor")
+monitor_height=$(jq -r '.height' <<<"$monitor")
+panel_width=$((monitor_width * 70 / 100))
+panel_height=$((monitor_height * 80 / 100))
+panel_x=$((monitor_x + (monitor_width - panel_width) / 2))
+panel_y=$((monitor_y + (monitor_height - panel_height) / 2))
+
+if [[ "$floating" != "true" ]]; then
+    hyprctl dispatch 'hl.dsp.window.float({ action = "set", state = true })'
+fi
+hyprctl dispatch "hl.dsp.window.resize({ x = $panel_width, y = $panel_height })"
+hyprctl dispatch "hl.dsp.window.move({ x = $panel_x, y = $panel_y, relative = false })"

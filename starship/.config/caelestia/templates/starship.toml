@@ -1,0 +1,114 @@
+# Caelestia renders this template on scheme changes; edit this source, not its generated output.
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+continuation_prompt = "[▸▹ ](dimmed white)"
+palette = "caelestia"
+
+# Joined Arch/directory segment; optional pills include their own rounded caps.
+# Fill keeps the clock on the first line in Fish.
+format = """
+[](fg:os_bg)$os[](fg:os_bg bg:dir_bg)$directory[](fg:dir_bg)  \
+([](fg:git_bg)[  $git_branch$git_commit$git_status ](fg:text bg:git_bg)[](fg:git_bg)  )\
+([](fg:runtime_bg)[ $nodejs$bun$rust$golang$python](fg:text bg:runtime_bg)[](fg:runtime_bg)  )\
+$cmd_duration$fill$time
+$character"""
+right_format = ""
+
+[palettes.caelestia]
+os_bg = "#{{ primary.hex }}"
+os_fg = "#{{ onPrimary.hex }}"
+dir_bg = "#{{ inversePrimary.hex }}"
+git_bg = "#{{ onSecondaryFixedVariant.hex }}"
+runtime_bg = "#{{ onTertiaryFixedVariant.hex }}"
+time_bg = "#{{ overlay1.hex }}"
+slate = "#{{ outlineVariant.hex }}"
+text = "#{{ onSurface.hex }}"
+accent = "#{{ primary.hex }}"
+muted = "#{{ onSurfaceVariant.hex }}"
+error = "#{{ error.hex }}"
+
+[os]
+disabled = false
+style = "fg:os_fg bg:os_bg"
+format = "[ $symbol ]($style)"
+
+[os.symbols]
+Arch = "󰣇"
+
+[directory]
+home_symbol = "~ 󰋜"
+truncation_length = 3
+truncation_symbol = "…/"
+truncate_to_repo = true
+read_only = " ◈"
+style = "fg:text bg:dir_bg"
+read_only_style = "fg:text bg:dir_bg"
+format = '[ $path]($style)[$read_only]($read_only_style)[ ]($style)'
+disabled = false
+
+[git_branch]
+format = "$branch"
+truncation_length = 20
+truncation_symbol = "⋯"
+only_attached = true
+
+[git_commit]
+format = "$hash"
+only_detached = true
+
+[git_status]
+format = '( $all_status$ahead_behind)'
+conflicted = "="
+ahead = "↑${count}"
+behind = "↓${count}"
+diverged = "↑${ahead_count}↓${behind_count}"
+untracked = "?${count}"
+stashed = "*${count}"
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»${count}"
+deleted = "×${count}"
+
+[nodejs]
+symbol = " "
+format = "$symbol$version "
+
+[bun]
+symbol = " "
+format = "$symbol$version "
+
+[rust]
+symbol = " "
+format = "$symbol$version "
+
+[golang]
+symbol = " "
+format = "$symbol$version "
+
+[python]
+symbol = " "
+format = "$symbol$version( $virtualenv) "
+
+[cmd_duration]
+min_time = 2000
+format = "[](fg:slate)[ $duration ](fg:text bg:slate)[](fg:slate)  "
+
+[fill]
+symbol = " "
+
+[time]
+disabled = false
+time_format = "%R"
+utc_time_offset = "local"
+style = "fg:text bg:time_bg"
+format = "[](fg:time_bg)[  $time ]($style)[](fg:time_bg)"
+
+[character]
+format = "$symbol "
+success_symbol = "[❯](accent)"
+error_symbol = "[❯](error)"
+vimcmd_symbol = "[❯](muted)"
+vimcmd_replace_one_symbol = "[❯](bold error)"
+vimcmd_replace_symbol = "[❯](bold error)"
+vimcmd_visual_symbol = "[❯](bold accent)"

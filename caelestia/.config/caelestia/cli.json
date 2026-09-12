@@ -1,0 +1,12 @@
+{
+  "toggles": {
+    "music": {
+      "spotify": {
+        "command": ["spotify"]
+      }
+    }
+  },
+  "theme": {
+    "postHook": "pkill --signal USR1 --require-handler --euid \"$(id -u)\" --exact fish"
+  }
+}

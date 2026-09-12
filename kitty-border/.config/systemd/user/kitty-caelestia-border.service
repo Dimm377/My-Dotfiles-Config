@@ -1,0 +1,6 @@
+[Unit]
+Description=Apply Caelestia palette to Kitty borders
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/kitty-caelestia-border

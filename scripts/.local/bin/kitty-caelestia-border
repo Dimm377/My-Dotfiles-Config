@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state="${XDG_STATE_HOME:-$HOME/.local/state}/caelestia/scheme.json"
+socket="${KITTY_SOCKET:-${XDG_RUNTIME_DIR:-/run/user/$UID}/kitty-caelestia.sock}"
+
+[[ -r "$state" ]] || exit 0
+[[ -S "$socket" ]] || exit 0
+
+primary=$(jq -r '.colours.primary // empty' "$state")
+outline=$(jq -r '.colours.outline // empty' "$state")
+
+[[ "$primary" =~ ^[[:xdigit:]]{6}$ ]] || exit 0
+[[ "$outline" =~ ^[[:xdigit:]]{6}$ ]] || exit 0
+
+kitty @ --to "unix:$socket" set-colors \
+    active_border_color="#${primary}" \
+    inactive_border_color="#${outline}"

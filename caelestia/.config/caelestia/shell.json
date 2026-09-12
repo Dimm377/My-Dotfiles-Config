@@ -1,0 +1,54 @@
+{
+    "appearance": {
+        "transparency": {
+            "enabled": true
+        }
+    },
+    "bar": {
+        "activeWindow": {
+            "compact": true
+        },
+        "clock": {
+            "background": false,
+            "showDate": false,
+            "showIcon": true
+        },
+        "tray": {
+            "background": false,
+            "compact": false,
+            "recolour": false
+        },
+        "workspaces": {
+            "activeIndicator": true,
+            "activeLabel": "󰮯",
+            "displayType": "Text",
+            "label": "  ",
+            "occupiedLabel": "  "
+        }
+    },
+    "dashboard": {
+        "performance": {
+            "showBattery": true,
+            "showNetwork": true
+        },
+        "showWeather": false
+    },
+    "general": {
+        "idle": {
+            "timeouts": [
+                {
+                    "idleAction": "lock",
+                    "inhibitWhenAudio": false,
+                    "inhibitWhenCharging": false,
+                    "respectInhibitors": true,
+                    "timeout": 180
+                },
+                {
+                    "idleAction": "dpms off",
+                    "returnAction": "dpms on",
+                    "timeout": 300
+                }
+            ]
+        }
+    }
+}

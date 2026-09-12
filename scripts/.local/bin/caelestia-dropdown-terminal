@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Toggle the dedicated Kitty dropdown terminal special workspace.
+set -euo pipefail
+
+class='dropdown-terminal'
+workspace='terminal'
+
+active_special=$(hyprctl -j monitors | jq -r 'first(.[] | select(.focused)).specialWorkspace.name')
+if [[ "$active_special" == "special:$workspace" ]]; then
+    hyprctl dispatch "hl.dsp.workspace.toggle_special(\"$workspace\")"
+    active_class=$(hyprctl -j activewindow | jq -r '.class // empty')
+    [[ "$active_class" != "$class" ]]
+    exit 0
+fi
+
+hyprctl dispatch "hl.dsp.focus({ workspace = \"special:$workspace\" })"
+
+client=$(hyprctl -j clients | jq -r --arg class "$class" '.[] | select(.class == $class) | .address' | head -n1)
+if [[ -z "$client" ]]; then
+    kitty --class "$class" --detach
+    for _ in {1..20}; do
+        sleep 0.05
+        client=$(hyprctl -j clients | jq -r --arg class "$class" '.[] | select(.class == $class) | .address' | head -n1)
+        [[ -n "$client" ]] && break
+    done
+fi
+
+[[ -n "$client" ]] || exit 1
+
+# Mapping a new special-workspace client can close its empty workspace; focus it
+# again, then focus the exact resolved client rather than relying on workspace focus.
+hyprctl dispatch "hl.dsp.focus({ workspace = \"special:$workspace\" })"
+hyprctl dispatch "hl.dsp.focus({ window = \"address:$client\" })"
+
+monitor=$(hyprctl -j monitors | jq -c 'first(.[] | select(.focused))')
+monitor_x=$(jq -r '.x' <<<"$monitor")
+monitor_y=$(jq -r '.y' <<<"$monitor")
+monitor_width=$(jq -r '.width' <<<"$monitor")
+monitor_height=$(jq -r '.height' <<<"$monitor")
+width=$((monitor_width * 72 / 100))
+height=$((monitor_height * 43 / 100))
+x=$((monitor_x + (monitor_width - width) / 2))
+y=$((monitor_y + monitor_height * 10 / 100))
+
+hyprctl dispatch "hl.dsp.window.resize({ x = $width, y = $height })"
+hyprctl dispatch "hl.dsp.window.move({ x = $x, y = $y, relative = false })"
+
+active_address=$(hyprctl -j activewindow | jq -r '.address // empty')
+[[ "$active_address" == "$client" ]] || exit 1

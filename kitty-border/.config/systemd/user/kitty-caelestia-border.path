@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch Caelestia palette for Kitty border updates
+
+[Path]
+PathChanged=%h/.local/state/caelestia/scheme.json
+Unit=kitty-caelestia-border.service
+
+[Install]
+WantedBy=default.target

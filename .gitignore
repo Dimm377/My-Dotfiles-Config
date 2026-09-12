@@ -1,0 +1,31 @@
+# Backups, credentials, and local overrides
+*.bak
+*.bak-*
+*.backup
+*~
+*.swp
+*.swo
+.env
+.env.*
+!.env.example
+credentials*
+secrets*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Runtime data must never enter a Stow package
+**/.cache/
+**/.local/state/
+**/fish_variables
+**/*_history
+**/node_modules/
+**/__pycache__/
+**/.DS_Store
+
+# Neovim runtime/install artifacts
+nvim/.config/nvim/.git/
+nvim/.config/nvim/lazy/
+nvim/.config/nvim/plugin/
+nvim/.config/nvim/session*

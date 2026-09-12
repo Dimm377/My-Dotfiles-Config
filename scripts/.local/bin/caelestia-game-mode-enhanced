@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+state="$(caelestia shell gameMode isEnabled 2>/dev/null || printf '%s' false)"
+
+if [ "$state" = "true" ]; then
+    caelestia shell gameMode disable
+    powerprofilesctl set balanced
+    notify-send -u low -i applications-games \
+        'Game Mode disabled' 'Hyprland restored; power profile: balanced'
+else
+    caelestia shell gameMode enable
+    powerprofilesctl set performance
+    notify-send -u low -i applications-games \
+        'Game Mode enabled' 'Hyprland optimized; power profile: performance'
+fi
